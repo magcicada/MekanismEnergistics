@@ -1,4 +1,4 @@
-com.github.magcicada:Applied-Energistics-2:a69cc07buildscript {
+buildscript {
     repositories {
         maven { 
             url = 'https://maven.minecraftforge.net'
