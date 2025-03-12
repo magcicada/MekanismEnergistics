@@ -70,7 +70,7 @@ dependencies {
     deobfCompile 'com.github.magcicada:Applied-Energistics-2:a69cc07' //pae2
     deobfCompile "curse.maven:mekanism-ce-399904:4804509" //mek-ce
     compileOnly "curse.maven:gregtech-ce-unofficial-557242:5050979" // gt api
-    compileOnly "com.github.magcicada:NAE2:1.0" // nae
+    compileOnly "com.github.magcicada:nae2-port:1.0:1.0" // nae
 }
 
 sourceSets {
