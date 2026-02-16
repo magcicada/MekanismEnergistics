@@ -16,6 +16,7 @@ buildscript {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 if (project.use_mixins.toBoolean()) {
     apply plugin: 'org.spongepowered.mixin'
@@ -119,10 +120,10 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
-
+            from components.java 
+            
             pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
+                def dependenciesNode = asNode().getAt("dependencies")[0] ?: asNode().appendNode("dependencies")
                 configurations.compile.allDependencies.each { dep ->
                     if (dep.group != null && !dep.group.startsWith('deobf.')) {
                         def dependencyNode = dependenciesNode.appendNode('dependency')
