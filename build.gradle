@@ -120,17 +120,18 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from components.java 
-            
+            from components.java
+
             pom.withXml {
-                def dependenciesNode = asNode().getAt("dependencies")[0] ?: asNode().appendNode("dependencies")
-                configurations.compile.allDependencies.each { dep ->
-                    if (dep.group != null && !dep.group.startsWith('deobf.')) {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dep.group)
-                        dependencyNode.appendNode('artifactId', dep.name)
-                        dependencyNode.appendNode('version', dep.version)
-                        dependencyNode.appendNode('scope', 'compile')
+                def depsNode = asNode().dependencies[0]
+                if (depsNode) {
+                    depsNode.dependency.each { dep ->
+                        def groupIdNode = dep.groupId[0]
+                        def currentGroupId = groupIdNode.text()
+                        
+                        if (currentGroupId.startsWith("deobf.")) {
+                            groupIdNode.value = currentGroupId.replace("deobf.", "")
+                        }
                     }
                 }
             }
