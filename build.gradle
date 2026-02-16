@@ -115,3 +115,24 @@ jar {
         attributes(attribute_map)
     }
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.compile.allDependencies.each { dep ->
+                    if (dep.group != null && !dep.group.startsWith('deobf.')) {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dep.group)
+                        dependencyNode.appendNode('artifactId', dep.name)
+                        dependencyNode.appendNode('version', dep.version)
+                        dependencyNode.appendNode('scope', 'compile')
+                    }
+                }
+            }
+        }
+    }
+}
