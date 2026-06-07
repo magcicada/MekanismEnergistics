@@ -1,27 +1,37 @@
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+name: Build mod
 
-name: Java CI with Gradle
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+  workflow_dispatch:
 
-on: [ push, pull_request ]
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
         with:
-          fetch-depth: 0
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '8'
-          cache: 'gradle'
+          distribution: zulu
+          java-version: 8
+          cache: gradle
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build the mod
-        run: ./gradlew --no-daemon build
-      - uses: actions/upload-artifact@v4
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test --no-daemon
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: MekanismEnergistics
-          path: build/libs
+          path: build/libs/*.jar
+          if-no-files-found: error
